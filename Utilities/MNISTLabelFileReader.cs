@@ -12,7 +12,7 @@ namespace simpleNeuralNetwork.Utilities
     {
         private readonly string _labelFilePath;
         private readonly byte[] _data;
-        private readonly int _numberOfLabels;
+        public readonly int _numberOfLabels;
         public MNISTLabelFileReader(string labelFilePath)
         {
             _labelFilePath = labelFilePath;

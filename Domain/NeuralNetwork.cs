@@ -36,17 +36,17 @@ namespace simpleNeuralNetwork.Domain
             return inputCopy;
         }
 
-        public void TrainOnBatch(Matrix<double>[] inputs, Matrix<double>[] targets)
+        public void TrainOnBatch((Matrix<double> input, Matrix<double> target)[] pairs)
         {
-            if (inputs.Length != targets.Length)
-                throw new ArgumentException("inputs batch size must be equal to targets array size");
+            //if (inputs.Length != targets.Length)
+            //    throw new ArgumentException("inputs batch size must be equal to targets array size");
 
             var deltaW = new Matrix<double>[_layers.Length];
             var deltaB = new Matrix<double>[_layers.Length];
 
-            for (int i = 0; i < inputs.Length; i++)
+            for (int i = 0; i < pairs.Length; i++)
             {
-                var (tempDeltaW, tempDeltaB) = Backpropagate(inputs[i], targets[i]);
+                var (tempDeltaW, tempDeltaB) = Backpropagate(pairs[i].input, pairs[i].target);
                 for (int j = 0; j < _layers.Length; j++)
                 {
                     deltaW[j] = (deltaW[j] ?? Matrix<double>.Zeros(tempDeltaW[j].Rows, tempDeltaW[j].Cols)) + tempDeltaW[j];
@@ -56,8 +56,8 @@ namespace simpleNeuralNetwork.Domain
 
             for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i]._weights -= _learningRate * deltaW[i] * (1.0 / inputs.Length);
-                _layers[i]._biases -= _learningRate * deltaB[i] * (1.0 / inputs.Length);
+                _layers[i]._weights -= _learningRate * deltaW[i] * (1.0 / pairs.Length);
+                _layers[i]._biases -= _learningRate * deltaB[i] * (1.0 / pairs.Length);
             }
         }
 
